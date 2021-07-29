@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  grails_database:
+    image: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "grails_docker"
+  backend:
+    build:
+      context: .
+      args:
+        mysql_url: grails_database
+    ports:
+      - 8080:8080
+    depends_on:
+      - grails_database
+    links:
+      - grails_database
+volumes:
+  mysql_data:
